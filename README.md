@@ -12,9 +12,9 @@
 
 ## Synopsis<a name="synopsis"></a>
 
-Mtee is a Win32 console application that sends any data it receives to  stdout and to any number of files. Useful if you want to watch and record the output from a batch file or program. It can also prefix each line out output with a timestamp.
+Mtee is a Win32 console application that sends any data it receives to stdout and to any number of files. Useful if you want to watch and record the output from a batch file or program. It can also prefix each line of output with a timestamp.
 
-The is a 17kb standalone executable. It does not create any temporary files or write to the registry. There is no installation procedure, just run it. To remove all traces of Mtee from your system, just delete it.
+Mtee is a 17kb standalone executable. It does not create any temporary files or write to the registry. There is no installation procedure, just run it. To remove all traces of Mtee from your system, just delete it.
 
 Mtee is simple to use and only has several options. To list them, type:-
 
@@ -110,7 +110,7 @@ batch.cmd 2>&1 1>&3 3>&1 |mtee/t/d log
 
 How can I determine the exit code of the process piped into Mtee?
 
-> The next release of Mtee (v2.3) will have a new option to tell Mtee it exit with the exit code of the process that was piped into.
+> The next release of Mtee (v2.3) will have a new option to instruct Mtee to exit with the exit code of the process that was piped into it.
 
 ## Screenshots<a name="screenshots"></a>
 
@@ -126,4 +126,4 @@ Revision | Date | Changes
 
 ## Copyright and License<a name="copyright-and-license"></a>
 
-Code and documentation copyright 2001-2014 Ritchie Lawrence. Code released under [MIT License](https://github.com/ritchielawrence/mtee/blob/master/LICENSE.txt)
+Code and documentation copyright 2001-2016 Ritchie Lawrence. Code released under [MIT License](https://github.com/ritchielawrence/mtee/blob/master/LICENSE.txt)
