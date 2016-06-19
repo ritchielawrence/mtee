@@ -1,5 +1,3 @@
-# Mtee
-
 ## Table of Contents
 
 * [Synopsis](#synopsis)
