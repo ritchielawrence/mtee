@@ -119,7 +119,7 @@ How can I determine the exit code of the process piped into Mtee?
 
 Revision | Date | Changes
 ---|---|---
-2.21 | 2016-08-07 | Added /E option (exit with exit code of process piped into Mtee). Cleaned up code - Mtee compiles without errors or warnings using a default install of the [CodeBlocks IDE](www.codeblocks.org/).
+2.21 | 2016-08-07 | Added /E option (exit with exit code of process piped into Mtee). Cleaned up code - Mtee compiles without errors or warnings using a default install of the [CodeBlocks IDE](http://www.codeblocks.org/).
 2.2 | 2016-06-10 | Credit to Jari Kulmala for implementing workaround to avoid possible bug in Windows 10 where program takes 30 seconds to exit.
 2.1 | 2013-03-01 | Mtee is now open source software released under the MIT License. Credit to Jari Kulmala for addressing the following:-<ul><li>mtee is now Windows 8 compatible</li><li>mtee assumed all files < 4GB</li><li>echo "t013\|mtee /u con" entered a continuous loop</li><li>"echo x x x x \| mtee" caused mtee to guess input was unicode</li><li>redirection to console and con device as output file was not supported</li></ul>
 2.0 | 2003-08-27 | The following features are new to Mtee v2.0:-<ul><li>Read and output unicode</li><li>Convert ANSI to unicode (and vice-versa)</li><li>Reads text and binary data without performing any character translations</li><li>Support for unicode filenames of ~32,000 characters</li><li>Smaller than ever. Mtee is now just 11kb (and no, it's not compressed!)</li></ul>
