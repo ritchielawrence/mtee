@@ -38,7 +38,7 @@
 
 <p>Mtee is a Win32 console application that sends any data it receives to stdout and to any number of files. Useful if you want to watch and record the output from a batch file or program. It can also prefix each line of output with a timestamp.</p>
 
-<p>Mtee is a 17kb standalone executable. It does not create any temporary files or write to the registry. There is no installation procedure, just run it. To remove all traces of Mtee from your system, just delete it.</p>
+<p>Mtee is a 19kb standalone executable. It does not create any temporary files or write to the registry. There is no installation procedure, just run it. To remove all traces of Mtee from your system, just delete it.</p>
 
 <p>Mtee is simple to use and only has several options. To list them, type:-</p>
 
@@ -49,13 +49,14 @@
 </h2>
 
 <pre>
-  MTEE [/A | /U] [/C] [/D] [/T] [[/+] file] [...]
+  MTEE [/A | /U] [/C] [/D] [/T] [/E] [[/+] file] [...]
 
   /A    Convert output to ANSI. Default output is same as input.
   /C    Continue if errors occur opening/writing to file (advanced users only).
   /D    Prefix each line of output with local date in YYYY-MM-DD format.
   /T    Prefix each line of output with local time in HH:MM:SS.MSS format.
   /U    Convert output to UNICODE. Default output is same as input.
+  /E    Exit with exit code of piped process.
   /+    Append to existing file. If omitted, existing file is overwritten.
   file  File to receive the output. File is overwritten if /+ not specified.
   ...   Any number of additional files. Use /+ before each file to append.
@@ -121,7 +122,7 @@
 <p>How can I determine the exit code of the process piped into Mtee?</p>
 
 <blockquote>
-<p>The next release of Mtee (v2.3) will have a new option to instruct Mtee to exit with the exit code of the process that was piped into it.</p>
+<p>Update Mtee to at least version v2.21 and use the /E option.</p>
 </blockquote>
 
 <h2>
@@ -143,6 +144,11 @@
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>2.21</td>
+<td>2016-08-07</td>
+<td>Added /E option (exit with exit code of process piped into Mtee). Cleaned up code - Mtee compiles without errors or warnings using a default install of the <a href="http://www.codeblocks.org/">CodeBlocks IDE</a>.</td>
+</tr>
 <tr>
 <td>2.2</td>
 <td>2016-06-10</td>
