@@ -1,6 +1,7 @@
-#define _WIN32_WINNT 0x0400
+#define _WIN32_WINNT 0x0502
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <tlhelp32.h>
 
 #define OP_IN_OUT_SHIFT				(16)			// out codes are 16 bits from in codes
 #define OP_ANSI_IN					(0x00000001)
@@ -36,6 +37,8 @@
 
 #define CTRL_CLEAR_EVENT (0xFFFF)
 
+#define MAX_CONSOLE_PID_LIST    (128L)
+
 //
 // Stores details of the files to be written to
 //
@@ -58,8 +61,9 @@ typedef struct _ARGS
 	BOOL		bContinue;			// if true, continue on I/O errors
 	BOOL		bHelp;				// if true, show helpscreen
 	BOOL		bUnicode;			// if true, output will be unicode (converted if required)
+	BOOL        bFwdExitCode;       // if true, exit with exit code of piped process
 	BOOL		bAnsi;				// if true, output will be ansi (converted if required)
-	BOOL		bIntermiate;		// if true, create intermediate directories if required
+	BOOL		bIntermediate;		// if true, create intermediate directories if required
 	FILEINFO	fi;					// first FILEINFO structure in linked list
 	DWORD		dwBufSize;			// max size of buffer for read operations
 	DWORD		dwPeekTimeout;		// max ms to peek for input
@@ -84,10 +88,12 @@ VOID ShowPipeInfo(HANDLE h);
 VOID ConfigStdIn(HANDLE h);
 PWSTR CreateFullPathW(PWSTR szPath);
 
-DWORD GetWinVer(VOID);
+//DWORD GetWinVer(VOID);
 DWORD GetFormattedDateTimeA(PCHAR lpBuf, BOOL bDate, BOOL bTime);
 DWORD GetFormattedDateTimeW(PWCHAR lpBuf, BOOL bDate, BOOL bTime);
 BOOL IsAnOutputConsoleDevice(HANDLE h);
+DWORD GetParentProcessId(VOID);
+HANDLE GetPipedProcessHandle(VOID);
 
 // perr.cpp
 DWORD Perror(DWORD dwErrNum);

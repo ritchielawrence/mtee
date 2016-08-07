@@ -12,7 +12,7 @@
 
 Mtee is a Win32 console application that sends any data it receives to stdout and to any number of files. Useful if you want to watch and record the output from a batch file or program. It can also prefix each line of output with a timestamp.
 
-Mtee is a 17kb standalone executable. It does not create any temporary files or write to the registry. There is no installation procedure, just run it. To remove all traces of Mtee from your system, just delete it.
+Mtee is a 19kb standalone executable. It does not create any temporary files or write to the registry. There is no installation procedure, just run it. To remove all traces of Mtee from your system, just delete it.
 
 Mtee is simple to use and only has several options. To list them, type:-
 
@@ -23,13 +23,14 @@ mtee /?
 ## Usage<a name="usage"></a>
 
 <pre>
-  MTEE [/A | /U] [/C] [/D] [/T] [[/+] file] [...]
+  MTEE [/A | /U] [/C] [/D] [/T] [/E] [[/+] file] [...]
 
   /A    Convert output to ANSI. Default output is same as input.
   /C    Continue if errors occur opening/writing to file (advanced users only).
   /D    Prefix each line of output with local date in YYYY-MM-DD format.
   /T    Prefix each line of output with local time in HH:MM:SS.MSS format.
   /U    Convert output to UNICODE. Default output is same as input.
+  /E    Exit with exit code of piped process.
   /+    Append to existing file. If omitted, existing file is overwritten.
   file  File to receive the output. File is overwritten if /+ not specified.
   ...   Any number of additional files. Use /+ before each file to append.
@@ -108,7 +109,7 @@ batch.cmd 2>&1 1>&3 3>&1 |mtee/t/d log
 
 How can I determine the exit code of the process piped into Mtee?
 
-> The next release of Mtee (v2.3) will have a new option to instruct Mtee to exit with the exit code of the process that was piped into it.
+> Update Mtee to at least version v2.21 and use the /E option.
 
 ## Screenshots<a name="screenshots"></a>
 
@@ -118,8 +119,9 @@ How can I determine the exit code of the process piped into Mtee?
 
 Revision | Date | Changes
 ---|---|---
+2.21 | 2016-08-07 | Added /E option (exit with exit code of process piped into Mtee). Cleaned up code - Mtee compiles without errors or warnings using a default install of the [CodeBlocks IDE](www.codeblocks.org/).
 2.2 | 2016-06-10 | Credit to Jari Kulmala for implementing workaround to avoid possible bug in Windows 10 where program takes 30 seconds to exit.
-2.1 | 2013-03-01 |Mtee is now open source software released under the MIT License. Credit to Jari Kulmala for addressing the following:-<ul><li>mtee is now Windows 8 compatible</li><li>mtee assumed all files < 4GB</li><li>echo "t013\|mtee /u con" entered a continuous loop</li><li>"echo x x x x \| mtee" caused mtee to guess input was unicode</li><li>redirection to console and con device as output file was not supported</li></ul>
+2.1 | 2013-03-01 | Mtee is now open source software released under the MIT License. Credit to Jari Kulmala for addressing the following:-<ul><li>mtee is now Windows 8 compatible</li><li>mtee assumed all files < 4GB</li><li>echo "t013\|mtee /u con" entered a continuous loop</li><li>"echo x x x x \| mtee" caused mtee to guess input was unicode</li><li>redirection to console and con device as output file was not supported</li></ul>
 2.0 | 2003-08-27 | The following features are new to Mtee v2.0:-<ul><li>Read and output unicode</li><li>Convert ANSI to unicode (and vice-versa)</li><li>Reads text and binary data without performing any character translations</li><li>Support for unicode filenames of ~32,000 characters</li><li>Smaller than ever. Mtee is now just 11kb (and no, it's not compressed!)</li></ul>
 
 ## Copyright and License<a name="copyright-and-license"></a>

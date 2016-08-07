@@ -11,9 +11,10 @@ BOOL ParseCommandlineW(LPARGS args)
 	args->bAnsi			= FALSE; // /A
 	args->bContinue		= FALSE; // /C
 	args->bAddDate		= FALSE; // /D
-	args->bIntermiate	= FALSE; // /I
+	args->bIntermediate	= FALSE; // /I
 	args->bAddTime		= FALSE; // /T
 	args->bUnicode		= FALSE; // /U
+	args->bFwdExitCode	= FALSE; // /E
 	args->dwBufSize		= 0x4000;
 	args->dwPeekTimeout = 50;
 	//
@@ -36,7 +37,9 @@ BOOL ParseCommandlineW(LPARGS args)
 		else if(!lstrcmpiW(lpToken, L"/D")) // add date
 			args->bAddDate = TRUE;
 		else if(!lstrcmpiW(lpToken, L"/I")) // create intermediate dirs
-			args->bIntermiate = TRUE;
+			args->bIntermediate = TRUE;
+		else if(!lstrcmpiW(lpToken, L"/E")) // forward exit code
+			args->bFwdExitCode = TRUE;
 		else if(!lstrcmpiW(lpToken, L"/T")) // add time
 			args->bAddTime = TRUE;
 		else if(!lstrcmpiW(lpToken, L"/U")) // unicode
@@ -51,18 +54,18 @@ BOOL ParseCommandlineW(LPARGS args)
 				Verbose(TEXT("The /+ switch must be followed by a filename.\r\n"));
 				return FALSE;
 			}
-			if(!CreateFileInfoStruct(&fi)) ExitProcess(Perror(NULL));
+			if(!CreateFileInfoStruct(&fi)) ExitProcess(Perror((DWORD)NULL));
 			fi->bAppend = TRUE;
 
 			if(!CheckFileName(lpToken)) ExitProcess(Perror(ERROR_INVALID_PARAMETER));
-			if(!StringAllocW(&fi->lpFileName, lpToken))	ExitProcess(Perror(NULL));
+			if(!StringAllocW(&fi->lpFileName, lpToken))	ExitProcess(Perror((DWORD)NULL));
 		}
 		else
 		{
 			// unknown token so assume a filename
-			if(!CreateFileInfoStruct(&fi)) ExitProcess(Perror(NULL));
+			if(!CreateFileInfoStruct(&fi)) ExitProcess(Perror((DWORD)NULL));
 			if(!CheckFileName(lpToken)) ExitProcess(Perror(ERROR_INVALID_PARAMETER));
-			if(!StringAllocW(&fi->lpFileName, lpToken))	ExitProcess(Perror(NULL));
+			if(!StringAllocW(&fi->lpFileName, lpToken))	ExitProcess(Perror((DWORD)NULL));
 		}
 	}
 
@@ -96,7 +99,7 @@ BOOL CheckFileName(PWCHAR lpToken)
 
 PFILEINFO CreateFileInfoStruct(PFILEINFO *fi)
 {
-	
+
 	(*fi)->fiNext = (PFILEINFO) HeapAlloc(GetProcessHeap(), 0, sizeof(FILEINFO));
 	if(!(*fi)->fiNext) return NULL;
 	//
@@ -148,7 +151,7 @@ BOOL GetCommandLineTokenW(PWCHAR *lpToken)
 	DWORD			cQuote = 0;			// keeps tracks of quotes
 	BOOL			bOutQuotes = TRUE;	// true if outside of quotes
 	BOOL			bInToken = FALSE;	// true if inside a token
-	
+
 	//
 	// if p is NULL, then I'm being called for first time
 	//
@@ -164,7 +167,7 @@ BOOL GetCommandLineTokenW(PWCHAR *lpToken)
 		//
 		lpTokenBuf = (PWCHAR) HeapAlloc(GetProcessHeap(), 0, sizeof(WCHAR) * (lstrlenW(p) + sizeof(WCHAR)));
 
-		if(!lpTokenBuf) ExitProcess(Perror(NULL));
+		if(!lpTokenBuf) ExitProcess(Perror((DWORD)NULL));
 
 		//
 		// skip over name of exe to get to start arguments
@@ -224,7 +227,7 @@ BOOL GetCommandLineTokenW(PWCHAR *lpToken)
 			{
 				bOutQuotes = !bOutQuotes;
 				p++;
-				
+
 				//
 				// three consecutive quotes make one 'real' quote
 				//
@@ -260,7 +263,7 @@ BOOL GetCommandLineTokenW(PWCHAR *lpToken)
 
 		} // while(*p)
 
-		
+
 		//
 		// terminate the token
 		//

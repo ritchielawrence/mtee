@@ -1,7 +1,7 @@
 /*
 History:
 	01-MAR-2013, MTEE 2.1
-		Bug: In Windows 8, mtee resulted to "Incorrect function" if output was to pipe. 
+		Bug: In Windows 8, mtee resulted to "Incorrect function" if output was to pipe.
 		Fixed to not not rely on undocumented error codes from WriteConsole.
 		At the same time, got rid of separate functions for console and disk files,
 		and combined them to WriteBufferToConsoleAndFilesA and WriteBufferToConsoleAndFilesW and separating
@@ -11,7 +11,7 @@ History:
 
 		Bug: echo x x x x | mtee guessed that the input was Unicode.
 		Fixed to use IS_TEXT_UNICODE_NULL_BYTES instead of IS_TEXT_UNICODE_ASCII16 |	IS_TEXT_UNICODE_STATISTICS.
-		
+
 		Bug: echo t013|mtee /u con entered a forever loop.
 		Fixed the bug in WriteBufferToDiskW loop.
 
@@ -41,7 +41,7 @@ int main(VOID)
 	DWORD		dwBytesRead		= 0L;	// bytes read from input
 	HANDLE		hOut			= NULL;	// handle to stdout
 	HANDLE		hIn				= NULL;	// handle to stdin
-	DWORD		dwStdInType		= NULL;	// stdin's filetype (file/pipe/console)
+	DWORD		dwStdInType		= (DWORD)NULL;	// stdin's filetype (file/pipe/console)
 	PFILEINFO	fi				= NULL;	// pointer for indexing FILEINFO records
 	BOOL		bBomFound		= FALSE;// true if BOM found
 	BOOL		bCtrlHandler	= FALSE;
@@ -57,11 +57,13 @@ int main(VOID)
 #ifdef _DEBUG
 	MessageBox(0,"start", "mtee", MB_OK);
 #endif
+/*
 	if(!GetWinVer())
 	{
 		Verbose(TEXT("This program requires Windows NT4, 2000, XP or 2003.\r\n"));
 		ExitProcess(1);
 	}
+*/
 	//
 	// install ctrl handler to trap ctrl-c and ctrl-break
 	//
@@ -81,10 +83,11 @@ int main(VOID)
 	//
 	// get handles to stdout/stdin
 	//
-	if((hIn = GetStdHandle(STD_INPUT_HANDLE)) == INVALID_HANDLE_VALUE) ExitProcess(Perror(NULL));
-	if((hOut = GetStdHandle(STD_OUTPUT_HANDLE)) == INVALID_HANDLE_VALUE) ExitProcess(Perror(NULL));
+	if((hIn = GetStdHandle(STD_INPUT_HANDLE)) == INVALID_HANDLE_VALUE) ExitProcess(Perror((DWORD)NULL));
+	if((hOut = GetStdHandle(STD_OUTPUT_HANDLE)) == INVALID_HANDLE_VALUE) ExitProcess(Perror((DWORD)NULL));
 
 	args.fi.hFile = hOut;
+
 	//
 	// determine whether the output is a console
 	//
@@ -94,6 +97,13 @@ int main(VOID)
 	// determine the type of input file then peek at content to ascertain if it's unicode
 	//
 	dwStdInType = GetFileType(hIn);
+
+    //
+    // if requested by user, get handle to piped process
+    //
+    HANDLE hPipedProcess = NULL;
+    if (args.bFwdExitCode) hPipedProcess = GetPipedProcessHandle();
+
 
 	switch(dwStdInType)
 	{
@@ -111,7 +121,7 @@ int main(VOID)
 				dwFileSizeAtLeast = 0xFFFFFFFE;
 			if(dwFileSizeAtLeast == 0xFFFFFFFF && GetLastError() != NO_ERROR)
 			{
-				if(!args.bContinue) ExitProcess(Perror(NULL));
+				if(!args.bContinue) ExitProcess(Perror((DWORD)NULL));
 				else dwFileSizeAtLeast = 0L;
 			}
 			//
@@ -129,14 +139,14 @@ int main(VOID)
 					//
 					// if failed and if i/o errors not being ignored then quit
 					//
-					if(!args.bContinue) ExitProcess(Perror(NULL));
+					if(!args.bContinue) ExitProcess(Perror((DWORD)NULL));
 					else break;
 				}
 				//
 				// reset the filepointer to beginning
 				//
-				if(SetFilePointer(hIn, NULL, NULL, FILE_BEGIN) && (!args.bContinue))
-					ExitProcess(Perror(NULL));
+				if(SetFilePointer(hIn, (LONG)NULL, NULL, FILE_BEGIN) && (!args.bContinue))
+					ExitProcess(Perror((DWORD)NULL));
 			}
 		}
 		break;
@@ -165,7 +175,7 @@ int main(VOID)
 				&dwPeekBytesAvailable,		// pointer to total number of bytes available
 				&dwPeekBytesUnavailable))	// pointer to unread bytes in this message
 			{
-				if(GetLastError() != ERROR_BROKEN_PIPE)	ExitProcess(Perror(NULL));
+				if(GetLastError() != ERROR_BROKEN_PIPE)	ExitProcess(Perror((DWORD)NULL));
 			}
 			Sleep(PEEK_WAIT_INT);
 			cPeekTimeout += PEEK_WAIT_INT;
@@ -182,7 +192,7 @@ int main(VOID)
 	{
 		fi->hFile = CreateFileW
 		(
-			args.bIntermiate ? CreateFullPathW(fi->lpFileName) : fi->lpFileName,
+			args.bIntermediate ? CreateFullPathW(fi->lpFileName) : fi->lpFileName,
 			GENERIC_WRITE,			// we definitely need write access
 			FILE_SHARE_READ,		// allow others to open file for read
 			NULL,					// security attr - no thanks
@@ -190,18 +200,17 @@ int main(VOID)
 			0,						// flags & attributes - gulp! have you seen the documentation?
 			NULL					// handle to a template? yer right
 		);
-		if((fi->hFile == INVALID_HANDLE_VALUE) && !args.bContinue) ExitProcess(Perror(NULL));
+		if((fi->hFile == INVALID_HANDLE_VALUE) && !args.bContinue) ExitProcess(Perror((DWORD)NULL));
 		//
 		// if appending set filepointer to eof
 		//
 		if(fi->bAppend)
 		{
-			if((SetFilePointer(fi->hFile, NULL, NULL, FILE_END) == INVALID_SET_FILE_POINTER)
+			if((SetFilePointer(fi->hFile, (LONG)NULL, NULL, FILE_END) == INVALID_SET_FILE_POINTER)
 				&& !args.bContinue)
 			{
-				ExitProcess(Perror(NULL));
+				ExitProcess(Perror((DWORD)NULL));
 			}
-			//printfW(L"file: %s is %d", fi->lpFileName, GetFile )
 		}
 
 		//
@@ -214,7 +223,7 @@ int main(VOID)
 		//
 		if(!fi->bIsConsole && !SetEndOfFile(fi->hFile))
 		{
-			switch(GetLastError())	
+			switch(GetLastError())
 			{
 			case ERROR_INVALID_HANDLE:		// CON, CONOUT$, CONIN$ device, so close the record
 				//Yes, this is OK also. fi->hFile = INVALID_HANDLE_VALUE;
@@ -223,7 +232,7 @@ int main(VOID)
 			case ERROR_INVALID_PARAMETER:	// PRN device
 				break;
 			default:
-				if(!args.bContinue) ExitProcess(Perror(NULL));
+				if(!args.bContinue) ExitProcess(Perror((DWORD)NULL));
 			}
 		}
 
@@ -264,7 +273,7 @@ int main(VOID)
 	// allocate the main I/O buffer
 	//
 	lpBuf = (PCHAR) HeapAlloc(GetProcessHeap(), 0, args.dwBufSize * sizeof(CHAR));
-	if(!lpBuf) ExitProcess(Perror(NULL));
+	if(!lpBuf) ExitProcess(Perror((DWORD)NULL));
 
 	if(args.bAnsi) dwOperation = (dwInFormat | OP_ANSI_OUT);
 	else if(args.bUnicode) dwOperation = (dwInFormat | OP_UNICODE_OUT);
@@ -277,7 +286,7 @@ int main(VOID)
 	{
 		if(!ReadFile(hIn, lpBuf, sizeof(WCHAR), &dwBytesRead, NULL))
 		{
-			if(GetLastError() != ERROR_BROKEN_PIPE) ExitProcess(Perror(NULL));
+			if(GetLastError() != ERROR_BROKEN_PIPE) ExitProcess(Perror((DWORD)NULL));
 		}
 	}
 	//
@@ -287,29 +296,29 @@ int main(VOID)
 	{
 		if(!WriteBom(args.fi.fiNext, args.bContinue))
 		{
-			if(!args.bContinue) ExitProcess(Perror(NULL));
+			if(!args.bContinue) ExitProcess(Perror((DWORD)NULL));
 		}
 	}
-	
-	for(;;) 
+
+	for(;;)
 	{
 		if(!ReadFile(hIn, lpBuf, args.dwBufSize * sizeof(CHAR), &dwBytesRead, NULL))
 		{
 			if(GetLastError() != ERROR_BROKEN_PIPE)
 			{
-				Perror(NULL);
+				Perror((DWORD)NULL);
 				break;
 			}
 		}
 		//
 		// if nothing read or user entered EOF then break (ctrl event also causes nothing to be read )
 		//
-		if( (!dwBytesRead) || ((dwStdInType == FILE_TYPE_CHAR) && (*lpBuf == '0x1A')) ) break;
+		if( (!dwBytesRead) || ((dwStdInType == FILE_TYPE_CHAR) && (*lpBuf == '\x1A')) ) break;
 		if(dwOperation == OP_ANSI_IN_ANSI_OUT)
 		{
 			if(!WriteBufferToConsoleAndFilesA(&args, lpBuf, dwBytesRead, args.bAddDate, args.bAddTime))
 			{
-				Perror(NULL);
+				Perror((DWORD)NULL);
 				break;
 			}
 		}
@@ -317,7 +326,7 @@ int main(VOID)
 		{
 			if(!WriteBufferToConsoleAndFilesW(&args, (PWCHAR) lpBuf, dwBytesRead / sizeof(WCHAR), args.bAddDate, args.bAddTime))
 			{
-				Perror(NULL);
+				Perror((DWORD)NULL);
 				break;
 			}
 		}
@@ -326,7 +335,7 @@ int main(VOID)
 			AnsiToUnicode(&lpUnicodeBuf, lpBuf, &dwBytesRead);
 			if(!WriteBufferToConsoleAndFilesW(&args, (PWCHAR) lpUnicodeBuf, dwBytesRead, args.bAddDate, args.bAddTime))
 			{
-				Perror(NULL);
+				Perror((DWORD)NULL);
 				break;
 			}
 		}
@@ -335,7 +344,7 @@ int main(VOID)
 			UnicodeToAnsi(&lpAnsiBuf, (PWCHAR) lpBuf, &dwBytesRead);
 			if(!WriteBufferToConsoleAndFilesA(&args, lpAnsiBuf, dwBytesRead / sizeof(WCHAR), args.bAddDate, args.bAddTime))
 			{
-				Perror(NULL);
+				Perror((DWORD)NULL);
 				break;
 			}
 		}
@@ -352,8 +361,17 @@ int main(VOID)
 	}
 	if(bCtrlHandler) SetConsoleCtrlHandler(HandlerRoutine, FALSE);
 	if(dwStdInType == FILE_TYPE_CHAR) FlushFileBuffers(hIn);
+
+    DWORD dwExitCode = 0;
+    //
+    // if requested by user, get exit code of piped process
+    //
+    if(args.bFwdExitCode) {
+        GetExitCodeProcess(hPipedProcess, &dwExitCode);
+        CloseHandle(hPipedProcess);
+    }
 	//
-	// Using ExitProcess at end to workaround an issue in Windows 10
+	// Use ExitProcess (instead of return) to workaround an issue in Windows 10
 	//
-	ExitProcess(0);
+	ExitProcess(dwExitCode);
 }

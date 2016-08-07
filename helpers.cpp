@@ -67,7 +67,7 @@ VOID MsgBox(LPCTSTR msg)
 }
 
 */
-DWORD GetWinVer(VOID)
+/*DWORD GetWinVer(VOID)
 {
 	OSVERSIONINFO os;
 	os.dwOSVersionInfoSize = sizeof (OSVERSIONINFO);
@@ -92,12 +92,13 @@ DWORD GetWinVer(VOID)
 		{
 			case 0:  myVersion = VER_2000; break;
 			case 1:  myVersion = VER_XP;   break;
-			default: myVersion = VER_2003;        
+			default: myVersion = VER_2003;
 		}
 	}
 
 	return myVersion;
 }
+*/
 /*
          dwPlatFormID  dwMajorVersion  dwMinorVersion  dwBuildNumber  GetWinVer()
 95             1              4               0             950            0
@@ -123,7 +124,7 @@ DWORD GetFormattedDateTimeA(PCHAR lpBuf, BOOL bDate, BOOL bTime)
 {
 	SYSTEMTIME st;
 	DWORD dwSize = 0;
-	
+
 	GetLocalTime(&st);
 
 	if(bDate)
@@ -142,7 +143,7 @@ DWORD GetFormattedDateTimeW(PWCHAR lpBuf, BOOL bDate, BOOL bTime)
 {
 	SYSTEMTIME st;
 	DWORD dwSize = 0;
-	
+
 	GetLocalTime(&st);
 
 	if(bDate)
@@ -160,7 +161,7 @@ DWORD GetFormattedDateTimeW(PWCHAR lpBuf, BOOL bDate, BOOL bTime)
 // this is hard. I first tried to use GetConsoleMode but it returns FALSE in case: mtee > con
 BOOL IsAnOutputConsoleDevice(HANDLE h)
 {
-	if (GetFileType(h) == FILE_TYPE_CHAR) 
+	if (GetFileType(h) == FILE_TYPE_CHAR)
 	{
 		// CON, NUL, ...
 		DWORD dwBytesWritten;
@@ -168,4 +169,64 @@ BOOL IsAnOutputConsoleDevice(HANDLE h)
 			return TRUE;
 	}
 	return FALSE;
+}
+
+DWORD GetParentProcessId(VOID)
+{
+    DWORD ppid = 0, pid = GetCurrentProcessId();
+
+    HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+    if (hSnapshot == INVALID_HANDLE_VALUE) Perror((DWORD)NULL);
+
+    PROCESSENTRY32 pe = {0};
+    pe.dwSize = sizeof(PROCESSENTRY32);
+
+    //
+    // find our PID in the process snapshot then lookup parent PID
+    //
+    if(Process32First(hSnapshot, &pe)) {
+    	do {
+    		if (pe.th32ProcessID == pid) {
+    			ppid = pe.th32ParentProcessID;
+    			break;
+            }
+        } while(Process32Next(hSnapshot, &pe));
+    }
+    CloseHandle(hSnapshot);
+    return ppid;
+}
+
+HANDLE GetPipedProcessHandle(VOID)
+{
+    //
+    // returns a handle to the process piped into mtee
+    //
+    DWORD dwProcCount, lpdwProcessList[MAX_CONSOLE_PID_LIST];
+    HANDLE hPipedProcess = NULL;
+    //
+    // get an array of PIDs attached to this console
+    //
+    dwProcCount = GetConsoleProcessList(lpdwProcessList, MAX_CONSOLE_PID_LIST);
+    for (DWORD dw=0; dw<dwProcCount; dw++) {
+    }
+    // in tests it __appears__ array element 0 is this PID, element 1 is process
+    // piped into mtee, and last element is cmd.exe. if more than one pipe used,
+    // element 2 is next process to rhe left:
+    // eg A | B | C | mtee /e ==> lpdwProcessList[mtee][A][B][C][cmd]
+    //
+    // find the first PID that is not this PID and not parent PID.
+    //
+    DWORD ppid = GetParentProcessId();
+    DWORD cpid = GetCurrentProcessId();
+    for (DWORD dw = 0; dw < dwProcCount; dw++)
+    {
+        HANDLE Handle = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, lpdwProcessList[dw]);
+        if ((cpid != lpdwProcessList[dw]) && (ppid != lpdwProcessList[dw]))
+        {
+            hPipedProcess = Handle;
+            break;
+        }
+        CloseHandle(Handle);
+    }
+    return hPipedProcess;
 }
