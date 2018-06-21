@@ -17,6 +17,7 @@ int ShowHelp(VOID)
 	"  /T    Prefix each line of output with local time in HH:MM:SS.MSS format.\r\n"
 	"  /U    Convert output to UNICODE. Default output is same as input.\r\n"
     "  /E    Exit with exit code of piped process.\r\n"
+    "  /ET   Calculate and display elapsed time.\r\n"
 	"  /+    Append to existing file. If omitted, existing file is overwritten.\r\n"
 	"  file  File to receive the output. File is overwritten if /+ not specified.\r\n"
 	"  ...   Any number of additional files. Use /+ before each file to append.\r\n\r\n"
