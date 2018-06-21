@@ -96,6 +96,9 @@ BOOL IsAnOutputConsoleDevice(HANDLE h);
 DWORD GetParentProcessId(VOID);
 HANDLE GetPipedProcessHandle(VOID);
 
+int FormatElapsedTime( LARGE_INTEGER* elapsedTime, PCHAR outBuf,
+                                                        const int outBufSize );
+
 // perr.cpp
 DWORD Perror(DWORD dwErrNum);
 VOID Verbose(LPCTSTR szMsg);

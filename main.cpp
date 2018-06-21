@@ -371,8 +371,8 @@ int main(VOID)
         elapsedTime.QuadPart *= 1000000L;
         elapsedTime.QuadPart /= frequency.QuadPart;
 
-        strLen = snprintf( strElapsedTime, sizeof(strElapsedTime),
-                                "Elapsed Time: %I64d us", elapsedTime.QuadPart );
+        strLen = FormatElapsedTime( &elapsedTime, strElapsedTime,
+                                                    sizeof(strElapsedTime) );
         WriteBufferToConsoleAndFilesA(&args, strElapsedTime, strLen, FALSE,
                                                                         FALSE);
     }
