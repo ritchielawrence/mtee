@@ -45,7 +45,7 @@ BOOL ParseCommandlineW(LPARGS args)
 			args->bAddTime = TRUE;
 		else if(!lstrcmpiW(lpToken, L"/U")) // unicode
 			args->bUnicode = TRUE;
-		else if(!lstrcmpiW(lpToken, L"/ET")) // unicode
+		else if(!lstrcmpiW(lpToken, L"/ET")) // elapsed time
             args->bElapsedTime = TRUE;
 		else if(!lstrcmpiW(lpToken, L"/+")) // append
 		{
