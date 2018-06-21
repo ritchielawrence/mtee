@@ -15,6 +15,7 @@ BOOL ParseCommandlineW(LPARGS args)
 	args->bAddTime		= FALSE; // /T
 	args->bUnicode		= FALSE; // /U
 	args->bFwdExitCode	= FALSE; // /E
+	args->bElapsedTime  = FALSE; // /ET
 	args->dwBufSize		= 0x4000;
 	args->dwPeekTimeout = 50;
 	//
@@ -44,6 +45,8 @@ BOOL ParseCommandlineW(LPARGS args)
 			args->bAddTime = TRUE;
 		else if(!lstrcmpiW(lpToken, L"/U")) // unicode
 			args->bUnicode = TRUE;
+		else if(!lstrcmpiW(lpToken, L"/ET")) // unicode
+            args->bElapsedTime = TRUE;
 		else if(!lstrcmpiW(lpToken, L"/+")) // append
 		{
 			//
