@@ -1,4 +1,5 @@
 #include "header.h"
+#include <stdio.h>
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 // CreateFullPathW creates the directory structure pointed to by szPath
@@ -230,3 +231,25 @@ HANDLE GetPipedProcessHandle(VOID)
     }
     return hPipedProcess;
 }
+
+int FormatElapsedTime( LARGE_INTEGER* elapsedTime, PCHAR outBuf,
+                                                        const int outBufSize )
+{
+    int h = 0;
+    int m = 0;
+    int len = 0;
+
+    float s = float(elapsedTime->QuadPart / 1000000);
+    m = (int)(s / 60.0);
+    s = s - 60*m;
+
+    h = (int)((float)m/60.0);
+    m = m - 60*h;
+
+    len = snprintf( outBuf, outBufSize, "Elapsed time: %02dh%02dm%06.3fs", h, m, s);
+
+    return len;
+}
+
+
+

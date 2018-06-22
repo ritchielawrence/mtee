@@ -64,6 +64,7 @@ typedef struct _ARGS
 	BOOL        bFwdExitCode;       // if true, exit with exit code of piped process
 	BOOL		bAnsi;				// if true, output will be ansi (converted if required)
 	BOOL		bIntermediate;		// if true, create intermediate directories if required
+	BOOL        bElapsedTime;       // if true, calculate and display elapsed time
 	FILEINFO	fi;					// first FILEINFO structure in linked list
 	DWORD		dwBufSize;			// max size of buffer for read operations
 	DWORD		dwPeekTimeout;		// max ms to peek for input
@@ -94,6 +95,9 @@ DWORD GetFormattedDateTimeW(PWCHAR lpBuf, BOOL bDate, BOOL bTime);
 BOOL IsAnOutputConsoleDevice(HANDLE h);
 DWORD GetParentProcessId(VOID);
 HANDLE GetPipedProcessHandle(VOID);
+
+int FormatElapsedTime( LARGE_INTEGER* elapsedTime, PCHAR outBuf,
+                                                        const int outBufSize );
 
 // perr.cpp
 DWORD Perror(DWORD dwErrNum);
