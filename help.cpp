@@ -5,7 +5,7 @@ int ShowHelp(VOID)
 	DWORD cBytes;
 	PCHAR lpHelpMsg = (PCHAR)
 
-	("\r\nMTEE v2.21 Win32 Commandline Standard Stream Splitter for Windows XP .. 10.\r\n"
+	("\r\nMTEE v2.4 Win32 Commandline Standard Stream Splitter for Windows XP .. 10.\r\n"
 	"Copyright (c) 2001-2016 Ritchie Lawrence, http://www.commandline.co.uk.\r\n\r\n"
 //   ----+----1----+----2----+----3----+----4----+----5----+----6----+----7----+----8
 	"  MTEE [/A | /U] [/C] [/D] [/T] [/E] [[/+] file] [...]\r\n\r\n"
@@ -17,6 +17,7 @@ int ShowHelp(VOID)
 	"  /T    Prefix each line of output with local time in HH:MM:SS.MSS format.\r\n"
 	"  /U    Convert output to UNICODE. Default output is same as input.\r\n"
     "  /E    Exit with exit code of piped process.\r\n"
+    "  /ET   Calculate and display elapsed time.\r\n"
 	"  /+    Append to existing file. If omitted, existing file is overwritten.\r\n"
 	"  file  File to receive the output. File is overwritten if /+ not specified.\r\n"
 	"  ...   Any number of additional files. Use /+ before each file to append.\r\n\r\n"
