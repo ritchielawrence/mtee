@@ -300,6 +300,15 @@ int main(VOID)
 		}
 	}
 
+    LARGE_INTEGER startTimestamp, endTimestamp, elapsedTime;
+    LARGE_INTEGER frequency;
+
+    if( args.bElapsedTime )
+    {
+        (void)QueryPerformanceFrequency(&frequency);
+        (void)QueryPerformanceCounter(&startTimestamp);
+    }
+
 	for(;;)
 	{
 		if(!ReadFile(hIn, lpBuf, args.dwBufSize * sizeof(CHAR), &dwBytesRead, NULL))
@@ -349,6 +358,24 @@ int main(VOID)
 			}
 		}
 	}
+
+	if( args.bElapsedTime )
+    {
+        char strElapsedTime[128];
+        int strLen = 0;
+        memset( strElapsedTime, 0x00, sizeof(strElapsedTime) );
+
+        (void)QueryPerformanceCounter(&endTimestamp);
+
+        elapsedTime.QuadPart = endTimestamp.QuadPart - startTimestamp.QuadPart;
+        elapsedTime.QuadPart *= 1000000L;
+        elapsedTime.QuadPart /= frequency.QuadPart;
+
+        strLen = FormatElapsedTime( &elapsedTime, strElapsedTime,
+                                                    sizeof(strElapsedTime) );
+        WriteBufferToConsoleAndFilesA(&args, strElapsedTime, strLen, FALSE,
+                                                                        FALSE);
+    }
 
 	//
 	// close all open files (not the first entry that contains the std output)

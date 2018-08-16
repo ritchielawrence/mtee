@@ -31,6 +31,7 @@ mtee /?
   /T    Prefix each line of output with local time in HH:MM:SS.MSS format.
   /U    Convert output to UNICODE. Default output is same as input.
   /E    Exit with exit code of piped process.
+  /ET   Calculate and display elapsed time.  
   /+    Append to existing file. If omitted, existing file is overwritten.
   file  File to receive the output. File is overwritten if /+ not specified.
   ...   Any number of additional files. Use /+ before each file to append.
@@ -119,6 +120,7 @@ How can I determine the exit code of the process piped into Mtee?
 
 Revision | Date | Changes
 ---|---|---
+2.3 | 2018-06-21 | Added /ET option (calculate and display elapsed time).
 2.21 | 2016-08-07 | Added /E option (exit with exit code of process piped into Mtee). Cleaned up code - Mtee compiles without errors or warnings using a default install of the [CodeBlocks IDE](http://www.codeblocks.org/).
 2.2 | 2016-06-10 | Credit to Jari Kulmala for implementing workaround to avoid possible bug in Windows 10 where program takes 30 seconds to exit.
 2.1 | 2013-03-01 | Mtee is now open source software released under the MIT License. Credit to Jari Kulmala for addressing the following:-<ul><li>mtee is now Windows 8 compatible</li><li>mtee assumed all files < 4GB</li><li>echo "t013\|mtee /u con" entered a continuous loop</li><li>"echo x x x x \| mtee" caused mtee to guess input was unicode</li><li>redirection to console and con device as output file was not supported</li></ul>
