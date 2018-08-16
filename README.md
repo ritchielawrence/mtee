@@ -114,7 +114,7 @@ How can I determine the exit code of the process piped into Mtee?
 
 ## Screenshots<a name="screenshots"></a>
 
-![Screenshot of Mtee](https://raw.githubusercontent.com/ritchielawrence/mtee/master/mtee-screenshot1.png)
+![Screenshot of Mtee](https://raw.githubusercontent.com/danielt3/mtee/master/mtee-screenshot1.png)
 
 ## Revisions<a name="revisions"></a>
 
