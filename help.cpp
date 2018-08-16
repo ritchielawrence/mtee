@@ -5,7 +5,7 @@ int ShowHelp(VOID)
 	DWORD cBytes;
 	PCHAR lpHelpMsg = (PCHAR)
 
-	("\r\nMTEE v2.21 Win32 Commandline Standard Stream Splitter for Windows XP .. 10.\r\n"
+	("\r\nMTEE v2.4 Win32 Commandline Standard Stream Splitter for Windows XP .. 10.\r\n"
 	"Copyright (c) 2001-2016 Ritchie Lawrence, http://www.commandline.co.uk.\r\n\r\n"
 //   ----+----1----+----2----+----3----+----4----+----5----+----6----+----7----+----8
 	"  MTEE [/A | /U] [/C] [/D] [/T] [/E] [[/+] file] [...]\r\n\r\n"
