@@ -246,7 +246,7 @@ int FormatElapsedTime( LARGE_INTEGER* elapsedTime, PCHAR outBuf,
     h = (int)((float)m/60.0);
     m = m - 60*h;
 
-    len = snprintf( outBuf, outBufSize, "Elapsed time: %02dh%02dm%06.3fs", h, m, s);
+    len = snprintf( outBuf, outBufSize, "Elapsed time: %02dh%02dm%06.3fs\n", h, m, s);
 
     return len;
 }
