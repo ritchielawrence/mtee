@@ -12,7 +12,7 @@
 
 Mtee is a Win32 console application that sends any data it receives to stdout and to any number of files. Useful if you want to watch and record the output from a batch file or program. It can also prefix each line of output with a timestamp.
 
-Mtee is a 19kb standalone executable. It does not create any temporary files or write to the registry. There is no installation procedure, just run it. To remove all traces of Mtee from your system, just delete it.
+Mtee is a 42kb standalone executable. It does not create any temporary files or write to the registry. There is no installation procedure, just run it. To remove all traces of Mtee from your system, just delete it.
 
 Mtee is simple to use and only has several options. To list them, type:-
 
@@ -120,6 +120,7 @@ How can I determine the exit code of the process piped into Mtee?
 
 Revision | Date | Changes
 ---|---|---
+2.4 | 2018-08-16 | Fixed elapsed time display (added a newline at the end).
 2.3 | 2018-06-21 | Added /ET option (calculate and display elapsed time).
 2.21 | 2016-08-07 | Added /E option (exit with exit code of process piped into Mtee). Cleaned up code - Mtee compiles without errors or warnings using a default install of the [CodeBlocks IDE](http://www.codeblocks.org/).
 2.2 | 2016-06-10 | Credit to Jari Kulmala for implementing workaround to avoid possible bug in Windows 10 where program takes 30 seconds to exit.
