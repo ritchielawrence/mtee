@@ -12,7 +12,7 @@
 
 Mtee is a Win32 console application that sends any data it receives to stdout and to any number of files. Useful if you want to watch and record the output from a batch file or program. It can also prefix each line of output with a timestamp.
 
-Mtee is a 42kb standalone executable. It does not create any temporary files or write to the registry. There is no installation procedure, just run it. To remove all traces of Mtee from your system, just delete it.
+Mtee is a 45kb standalone executable. It does not create any temporary files or write to the registry. There is no installation procedure, just run it. To remove all traces of Mtee from your system, just delete it.
 
 Mtee is simple to use and only has several options. To list them, type:-
 
