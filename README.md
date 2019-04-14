@@ -31,7 +31,8 @@ mtee /?
   /T    Prefix each line of output with local time in HH:MM:SS.MSS format.
   /U    Convert output to UNICODE. Default output is same as input.
   /E    Exit with exit code of piped process.
-  /ET   Calculate and display elapsed time.  
+  /ET   Calculate and display elapsed time.
+  /CPU  Calculate and display average CPU load during execution.  
   /+    Append to existing file. If omitted, existing file is overwritten.
   file  File to receive the output. File is overwritten if /+ not specified.
   ...   Any number of additional files. Use /+ before each file to append.
@@ -120,6 +121,7 @@ How can I determine the exit code of the process piped into Mtee?
 
 Revision | Date | Changes
 ---|---|---
+2.5 | 2019-04-14 | Added /CPU option (calculate and display average CPU load).
 2.4 | 2018-08-16 | Fixed elapsed time display (added a newline at the end).
 2.3 | 2018-06-21 | Added /ET option (calculate and display elapsed time).
 2.21 | 2016-08-07 | Added /E option (exit with exit code of process piped into Mtee). Cleaned up code - Mtee compiles without errors or warnings using a default install of the [CodeBlocks IDE](http://www.codeblocks.org/).
