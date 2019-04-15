@@ -2,6 +2,6 @@
 #define CPULOAD_H_INCLUDED
 
 void    cpuLoadInit                 ( void );
-float   cpuLoadGetCurrentCpuLoad    ( void );
+BOOL    cpuLoadGetCurrentCpuLoad    ( double* currentCpuLoad );
 
 #endif // CPULOAD_H_INCLUDED

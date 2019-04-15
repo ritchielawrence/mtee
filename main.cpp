@@ -310,14 +310,20 @@ int main(VOID)
     }
 
     unsigned long long nSamples = 0;
-    float accumulatedCpuLoad = 0.0f;
+    double accumulatedCpuLoad = 0.0f;
 
     cpuLoadInit();
 
 	for(;;)
 	{
-	    ++nSamples;
-	    accumulatedCpuLoad += cpuLoadGetCurrentCpuLoad();
+	    double currentCpuLoad = 0.0f;
+	    BOOL rc = cpuLoadGetCurrentCpuLoad( &currentCpuLoad );
+
+	    if( rc )
+        {
+            ++nSamples;
+            accumulatedCpuLoad += currentCpuLoad;
+        }
 
 		if(!ReadFile(hIn, lpBuf, args.dwBufSize * sizeof(CHAR), &dwBytesRead, NULL))
 		{

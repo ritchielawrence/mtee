@@ -2,6 +2,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <stdio.h>
+#include <math.h>
 #include "cpuload.h"
 
 static ULARGE_INTEGER lastKernelTime_;
@@ -35,7 +36,7 @@ static BOOL GetSystemTimesAsUlargeInteger_( ULARGE_INTEGER* idleTime,
     return rc;
 }
 
-float cpuLoadGetCurrentCpuLoad( void )
+BOOL cpuLoadGetCurrentCpuLoad( double* currentCpuLoad )
 {
     ULARGE_INTEGER currentKernelTime;
     ULARGE_INTEGER currentIdleTime;
@@ -45,6 +46,8 @@ float cpuLoadGetCurrentCpuLoad( void )
     ULARGE_INTEGER idleTime;
     ULARGE_INTEGER userTime;
 
+    BOOL rc;
+
     memset( &currentIdleTime, 0x00, sizeof(ULARGE_INTEGER) );
     memset( &currentKernelTime, 0x00, sizeof(ULARGE_INTEGER) );
     memset( &currentUserTime, 0x00, sizeof(ULARGE_INTEGER) );
@@ -53,12 +56,10 @@ float cpuLoadGetCurrentCpuLoad( void )
     memset( &idleTime, 0x00, sizeof(ULARGE_INTEGER) );
     memset( &userTime, 0x00, sizeof(ULARGE_INTEGER) );
 
-    float cpuLoad = 0.0f;
-
-    BOOL rc = GetSystemTimesAsUlargeInteger_( &currentIdleTime,
+    BOOL rcOs = GetSystemTimesAsUlargeInteger_( &currentIdleTime,
                                                 &currentKernelTime,
                                                 &currentUserTime);
-    if( 0 != rc )
+    if( 0 != rcOs )
     {
         ULARGE_INTEGER loadTime;
         ULARGE_INTEGER totalTime;
@@ -73,15 +74,22 @@ float cpuLoadGetCurrentCpuLoad( void )
         loadTime.QuadPart = kernelTime.QuadPart + userTime.QuadPart;
         totalTime.QuadPart = kernelTime.QuadPart + userTime.QuadPart + idleTime.QuadPart;
 
-        cpuLoad = (float)((loadTime.QuadPart*100.0)/(totalTime.QuadPart));
+        *currentCpuLoad = (double)((loadTime.QuadPart*100.0)/(totalTime.QuadPart));
 
         lastIdleTime_.QuadPart = idleTime.QuadPart;
         lastKernelTime_.QuadPart = kernelTime.QuadPart;
         lastUserTime_.QuadPart = userTime.QuadPart;
     }
 
-    #if 0
-    printf( "currentCpuLoad = [%5.2f%%]\n", cpuLoad );
-    #endif
-    return cpuLoad;
+    if( isnan( *currentCpuLoad ) || isinf( *currentCpuLoad ) )
+    {
+        rc = FALSE;
+    }
+    else
+    {
+        rc = TRUE;
+        printf( "currentCpuLoad = [%5.2f%%]\n", *currentCpuLoad );
+    }
+
+    return rc;
 }
