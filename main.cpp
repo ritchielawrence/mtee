@@ -389,7 +389,7 @@ int main(VOID)
     {
         char cpuLoadStr[128];
         int cpuLoadStrlen = 0;
-        float averageCpuLoad = ( accumulatedCpuLoad / nSamples );
+        float averageCpuLoad = ( accumulatedCpuLoad / (float)nSamples );
 
         cpuLoadStrlen = snprintf( cpuLoadStr, sizeof(cpuLoadStr),
                                  "CPU Load (avg.) = %5.2f\n", averageCpuLoad );
