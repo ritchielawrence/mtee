@@ -5,6 +5,7 @@
 * [Examples](#examples)
 * [FAQs](#faqs)
 * [Screenshots](#screenshots)
+* [CPU Load](#cpuload)
 * [Revisions](#revisions)
 * [Copyright and License](#copyright-and-license)
 
@@ -116,6 +117,19 @@ How can I determine the exit code of the process piped into Mtee?
 ## Screenshots<a name="screenshots"></a>
 
 ![Screenshot of Mtee](https://raw.githubusercontent.com/danielt3/mtee/master/mtee-screenshot1.png)
+
+## CPU Load<a name="cpuload"></a>
+
+The CPU load calculations are based in the information from the ```GetSystemTimes``` Windows API. 
+For reference, please check: https://docs.microsoft.com/en-us/windows/desktop/api/processthreadsapi/nf-processthreadsapi-getsystemtimes
+
+The algorithm works by reading the *idle*, *kernel* and *user* times of the system (the time the system spent
+executing in each of these modes). Then, we define *load time* as the *kernel* time plus the *user time* and
+*total time* as *kernel time* plus *user time* plus *idle time*. Finally, the cpu load is calculated as
+the quotient between *load time* and *total time*. The mindset here is that everything that is not *idle* means
+loading the CPU.
+
+This is a rough estimate and subject to criticsm. I'm willing to listen and implement better approaches.
 
 ## Revisions<a name="revisions"></a>
 
