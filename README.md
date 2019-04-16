@@ -5,6 +5,7 @@
 * [Examples](#examples)
 * [FAQs](#faqs)
 * [Screenshots](#screenshots)
+* [CPU Load](#cpuload)
 * [Revisions](#revisions)
 * [Copyright and License](#copyright-and-license)
 
@@ -12,7 +13,7 @@
 
 Mtee is a Win32 console application that sends any data it receives to stdout and to any number of files. Useful if you want to watch and record the output from a batch file or program. It can also prefix each line of output with a timestamp.
 
-Mtee is a 42kb standalone executable. It does not create any temporary files or write to the registry. There is no installation procedure, just run it. To remove all traces of Mtee from your system, just delete it.
+Mtee is a 45kb standalone executable. It does not create any temporary files or write to the registry. There is no installation procedure, just run it. To remove all traces of Mtee from your system, just delete it.
 
 Mtee is simple to use and only has several options. To list them, type:-
 
@@ -31,7 +32,8 @@ mtee /?
   /T    Prefix each line of output with local time in HH:MM:SS.MSS format.
   /U    Convert output to UNICODE. Default output is same as input.
   /E    Exit with exit code of piped process.
-  /ET   Calculate and display elapsed time.  
+  /ET   Calculate and display elapsed time.
+  /CPU  Calculate and display average CPU load during execution.  
   /+    Append to existing file. If omitted, existing file is overwritten.
   file  File to receive the output. File is overwritten if /+ not specified.
   ...   Any number of additional files. Use /+ before each file to append.
@@ -116,10 +118,24 @@ How can I determine the exit code of the process piped into Mtee?
 
 ![Screenshot of Mtee](https://raw.githubusercontent.com/danielt3/mtee/master/mtee-screenshot1.png)
 
+## CPU Load<a name="cpuload"></a>
+
+The CPU load calculations are based in the information from the ```GetSystemTimes``` Windows API. 
+For reference, please check: https://docs.microsoft.com/en-us/windows/desktop/api/processthreadsapi/nf-processthreadsapi-getsystemtimes
+
+The algorithm works by reading the *idle*, *kernel* and *user* times of the system (the time the system spent
+executing in each of these modes). Then, we define *load time* as the *kernel* time plus the *user time* and
+*total time* as *kernel time* plus *user time* plus *idle time*. Finally, the cpu load is calculated as
+the quotient between *load time* and *total time*. The mindset here is that everything that is not *idle* means
+loading the CPU.
+
+This is a rough estimate and subject to criticsm. I'm willing to listen and implement better approaches.
+
 ## Revisions<a name="revisions"></a>
 
 Revision | Date | Changes
 ---|---|---
+2.5 | 2019-04-14 | Added /CPU option (calculate and display average CPU load).
 2.4 | 2018-08-16 | Fixed elapsed time display (added a newline at the end).
 2.3 | 2018-06-21 | Added /ET option (calculate and display elapsed time).
 2.21 | 2016-08-07 | Added /E option (exit with exit code of process piped into Mtee). Cleaned up code - Mtee compiles without errors or warnings using a default install of the [CodeBlocks IDE](http://www.codeblocks.org/).

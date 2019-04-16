@@ -3,6 +3,8 @@
 #include <windows.h>
 #include <tlhelp32.h>
 
+#include "cpuload.h"
+
 #define OP_IN_OUT_SHIFT				(16)			// out codes are 16 bits from in codes
 #define OP_ANSI_IN					(0x00000001)
 #define OP_UNICODE_IN				(0x00000002)
@@ -65,6 +67,7 @@ typedef struct _ARGS
 	BOOL		bAnsi;				// if true, output will be ansi (converted if required)
 	BOOL		bIntermediate;		// if true, create intermediate directories if required
 	BOOL        bElapsedTime;       // if true, calculate and display elapsed time
+	BOOL        bMeasureCPUUsage;   // if true, measure CPU usage during runtime
 	FILEINFO	fi;					// first FILEINFO structure in linked list
 	DWORD		dwBufSize;			// max size of buffer for read operations
 	DWORD		dwPeekTimeout;		// max ms to peek for input

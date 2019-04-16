@@ -16,6 +16,7 @@ BOOL ParseCommandlineW(LPARGS args)
 	args->bUnicode		= FALSE; // /U
 	args->bFwdExitCode	= FALSE; // /E
 	args->bElapsedTime  = FALSE; // /ET
+	args->bMeasureCPUUsage = FALSE; // CPU
 	args->dwBufSize		= 0x4000;
 	args->dwPeekTimeout = 50;
 	//
@@ -47,6 +48,8 @@ BOOL ParseCommandlineW(LPARGS args)
 			args->bUnicode = TRUE;
 		else if(!lstrcmpiW(lpToken, L"/ET")) // elapsed time
             args->bElapsedTime = TRUE;
+		else if(!lstrcmpiW(lpToken, L"/CPU")) // CPU usage
+            args->bMeasureCPUUsage = TRUE;
 		else if(!lstrcmpiW(lpToken, L"/+")) // append
 		{
 			//
