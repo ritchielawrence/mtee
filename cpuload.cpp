@@ -88,7 +88,6 @@ BOOL cpuLoadGetCurrentCpuLoad( double* currentCpuLoad )
     else
     {
         rc = TRUE;
-        printf( "currentCpuLoad = [%5.2f%%]\n", *currentCpuLoad );
     }
 
     return rc;
