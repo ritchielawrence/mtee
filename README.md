@@ -135,6 +135,7 @@ This is a rough estimate and subject to criticsm. I'm willing to listen and impl
 
 Revision | Date | Changes
 ---|---|---
+2.6 | 2019-04-29 | Improved processes list detection; don't open process handle if not needed.
 2.5 | 2019-04-14 | Added /CPU option (calculate and display average CPU load).
 2.4 | 2018-08-16 | Fixed elapsed time display (added a newline at the end).
 2.3 | 2018-06-21 | Added /ET option (calculate and display elapsed time).
