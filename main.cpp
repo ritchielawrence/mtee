@@ -309,8 +309,22 @@ int main(VOID)
         (void)QueryPerformanceCounter(&startTimestamp);
     }
 
+    unsigned long long nSamples = 0;
+    double accumulatedCpuLoad = 0.0f;
+
+    cpuLoadInit();
+
 	for(;;)
 	{
+	    double currentCpuLoad = 0.0f;
+	    BOOL rc = cpuLoadGetCurrentCpuLoad( &currentCpuLoad );
+
+	    if( rc )
+        {
+            ++nSamples;
+            accumulatedCpuLoad += currentCpuLoad;
+        }
+
 		if(!ReadFile(hIn, lpBuf, args.dwBufSize * sizeof(CHAR), &dwBytesRead, NULL))
 		{
 			if(GetLastError() != ERROR_BROKEN_PIPE)
@@ -374,6 +388,19 @@ int main(VOID)
         strLen = FormatElapsedTime( &elapsedTime, strElapsedTime,
                                                     sizeof(strElapsedTime) );
         WriteBufferToConsoleAndFilesA(&args, strElapsedTime, strLen, FALSE,
+                                                                        FALSE);
+    }
+
+    if( args.bMeasureCPUUsage )
+    {
+        char cpuLoadStr[128];
+        int cpuLoadStrlen = 0;
+        float averageCpuLoad = ( accumulatedCpuLoad / (float)nSamples );
+
+        cpuLoadStrlen = snprintf( cpuLoadStr, sizeof(cpuLoadStr),
+                                 "CPU Load (avg.) = %5.2f\n", averageCpuLoad );
+
+        WriteBufferToConsoleAndFilesA(&args, cpuLoadStr, cpuLoadStrlen, FALSE,
                                                                         FALSE);
     }
 

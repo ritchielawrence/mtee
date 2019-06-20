@@ -13,6 +13,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add option="-D_DEBUG" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -33,6 +34,8 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="args.cpp" />
+		<Unit filename="cpuload.cpp" />
+		<Unit filename="cpuload.h" />
 		<Unit filename="handler.cpp" />
 		<Unit filename="header.h" />
 		<Unit filename="help.cpp" />

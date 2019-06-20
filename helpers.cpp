@@ -1,5 +1,6 @@
 #include "header.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 // CreateFullPathW creates the directory structure pointed to by szPath
@@ -197,19 +198,40 @@ DWORD GetParentProcessId(VOID)
     return ppid;
 }
 
+static DWORD getActualNumberOfConsoleProcesses( VOID )
+{
+    DWORD dummyProcessId;
+    DWORD numberOfProcesses;
+
+    numberOfProcesses = GetConsoleProcessList( &dummyProcessId, 1 );
+
+    return numberOfProcesses;
+}
+
 HANDLE GetPipedProcessHandle(VOID)
 {
     //
     // returns a handle to the process piped into mtee
     //
-    DWORD dwProcCount, lpdwProcessList[MAX_CONSOLE_PID_LIST];
-    HANDLE hPipedProcess = NULL;
+    DWORD dwProcCount = 0;
+    DWORD *lpdwProcessList;
+    HANDLE hPipedProcess = INVALID_HANDLE_VALUE;
+
     //
     // get an array of PIDs attached to this console
     //
-    dwProcCount = GetConsoleProcessList(lpdwProcessList, MAX_CONSOLE_PID_LIST);
-    for (DWORD dw=0; dw<dwProcCount; dw++) {
+
+    dwProcCount = getActualNumberOfConsoleProcesses();
+    lpdwProcessList = (DWORD*)malloc( dwProcCount * sizeof(DWORD) );
+    if( NULL != lpdwProcessList && dwProcCount > 0 )
+    {
+        dwProcCount = GetConsoleProcessList( lpdwProcessList, dwProcCount );
     }
+    else
+    {
+        return INVALID_HANDLE_VALUE;
+    }
+
     // in tests it __appears__ array element 0 is this PID, element 1 is process
     // piped into mtee, and last element is cmd.exe. if more than one pipe used,
     // element 2 is next process to rhe left:
@@ -221,14 +243,21 @@ HANDLE GetPipedProcessHandle(VOID)
     DWORD cpid = GetCurrentProcessId();
     for (DWORD dw = 0; dw < dwProcCount; dw++)
     {
-        HANDLE Handle = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, lpdwProcessList[dw]);
         if ((cpid != lpdwProcessList[dw]) && (ppid != lpdwProcessList[dw]))
         {
-            hPipedProcess = Handle;
-            break;
+            HANDLE Handle = OpenProcess(
+                                PROCESS_QUERY_INFORMATION | PROCESS_VM_READ,
+                                FALSE,
+                                lpdwProcessList[dw]);
+            if( INVALID_HANDLE_VALUE != Handle )
+            {
+                hPipedProcess = Handle;
+                break;
+            }
         }
-        CloseHandle(Handle);
     }
+
+    free( lpdwProcessList );
     return hPipedProcess;
 }
 
@@ -246,7 +275,7 @@ int FormatElapsedTime( LARGE_INTEGER* elapsedTime, PCHAR outBuf,
     h = (int)((float)m/60.0);
     m = m - 60*h;
 
-    len = snprintf( outBuf, outBufSize, "Elapsed time: %02dh%02dm%06.3fs", h, m, s);
+    len = snprintf( outBuf, outBufSize, "Elapsed time: %02dh%02dm%06.3fs\n", h, m, s);
 
     return len;
 }
